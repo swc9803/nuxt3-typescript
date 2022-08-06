@@ -1,42 +1,9 @@
-# Nuxt 3 Minimal Starter
+## 강의
 
-Look at the [nuxt 3 documentation](https://v3.nuxtjs.org) to learn more.
+캡틴판교 - 실전 프로젝트로 배우는 타입스크립트 
 
-## Setup
+1. 타입스크립트 기본 환경 구성
+    npm 초기화
+    타입스크립트 라이브러리 설치
+    타입스크립트 설정 파일 설정 및 기본 값 추가
 
-Make sure to install the dependencies:
-
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install --shamefully-hoist
-```
-
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Checkout the [deployment documentation](https://v3.nuxtjs.org/guide/deploy/presets) for more information.
