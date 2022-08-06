@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview"
+  },
+  "devDependencies": {
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^3.0.1",
+    "@vue/eslint-config-prettier": "^7.0.0",
+    "eslint": "^8.21.0",
+    "eslint-plugin-nuxt": "^3.2.0",
+    "nuxt": "3.0.0-rc.6",
+    "prettier": "^2.7.1"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.3.1",
+    "pinia": "^2.0.17",
+    "sass": "^1.54.2"
+  }
+}
