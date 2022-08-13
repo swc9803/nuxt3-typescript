@@ -7,6 +7,9 @@ module.exports = {
         "eslint:recommended",
         "@vue/eslint-config-prettier",
     ],
+    parserOptions: {
+        sourceType: "module",
+    },
     rules: {
         "prettier/prettier": ["error", { tabWidth: 4 }],
         "vue/multi-word-component-names": 0,

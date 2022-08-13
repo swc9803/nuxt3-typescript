@@ -27,4 +27,4 @@ log('a', 10);
 function printText(text: string, type?: string) {
   console.log(text);
 }
-printText('hi');
+printText('hi', 'dd');
