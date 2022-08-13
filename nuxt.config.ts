@@ -6,5 +6,6 @@ export default defineNuxtConfig({
     build: {
         ssr: true,
     },
+    css: ["~/assets/main.css"],
     buildModules: ["@pinia/nuxt"],
 });
