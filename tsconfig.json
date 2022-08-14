@@ -2,6 +2,11 @@
   // https://v3.nuxtjs.org/concepts/typescript
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "allowJs": true,
+    // "target": "ES5",
+    "outDir": "./built",
+    "moduleResolution": "Node",
+    "noImplicitAny": true
   }
 }
