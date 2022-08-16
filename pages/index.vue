@@ -60,8 +60,9 @@ onMounted(() => {
     function $(selector: string) {
         return document.querySelector(selector);
     }
+
     function getUnixTimestamp(date: Date) {
-        return new Date(date).getTime();0
+        return new Date(date).getTime();
     }
 
     // DOM                  // $ = document.querySelector
@@ -88,6 +89,8 @@ onMounted(() => {
         spinnerDiv.appendChild(document.createElement("div"));
         wrapperDiv.appendChild(spinnerDiv);
         return wrapperDiv;
+
+        
     }
 
     // state
