@@ -53,7 +53,9 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import axios from "axios";
+// import * as Chart from "chart.js";
 import { Chart } from "chart.js";
+import { CovidSummaryResponse } from "../covid/index.js";
 
 onMounted(() => {
     // utils
@@ -98,7 +100,8 @@ onMounted(() => {
     // eslint-disable-next-line no-unused-vars
     let isRecoveredLoading = false;
 
-    function fetchCovidSummary() {
+    // api
+    function fetchCovidSummary(): Promise<CovidSummaryResponse> {
         const url = "https://api.covid19api.com/summary";
         return axios.get(url);
     }
