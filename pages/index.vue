@@ -52,10 +52,12 @@
 
 <script setup lang="ts">
 import { onMounted } from "vue";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 // import * as Chart from "chart.js";
-import { Chart } from "chart.js";
-import { CovidSummaryResponse } from "../covid/index.js";
+import { Chart, registerables } from "chart.js";
+import { CovidSummaryResponse, CountrySummaryResponse, Country } from "../covid/index.js";
+Chart.register(...registerables);
+
 
 onMounted(() => {
     // utils
@@ -101,7 +103,7 @@ onMounted(() => {
     let isRecoveredLoading = false;
 
     // api
-    function fetchCovidSummary(): Promise<CovidSummaryResponse> {
+    function fetchCovidSummary(): Promise<AxiosResponse<CovidSummaryResponse>>  {
         const url = "https://api.covid19api.com/summary";
         return axios.get(url);
     }
@@ -112,7 +114,7 @@ onMounted(() => {
         Deaths = 'deaths'
     }
 
-    function fetchCountryInfo(countryCode: string, status: CovidStatus) {
+    function fetchCountryInfo(countryCode: string, status: CovidStatus): Promise<AxiosResponse<CountrySummaryResponse>> {
         // params: confirmed, recovered, deaths
         const url = `https://api.covid19api.com/country/${countryCode}/status/${status}`;
         return axios.get(url);
@@ -271,37 +273,37 @@ onMounted(() => {
         renderChart(chartData, chartLabel);
     }
 
-    function setTotalConfirmedNumber(data: any) {
+    function setTotalConfirmedNumber(data: CovidSummaryResponse) {
         confirmedTotal.innerText = data.Countries.reduce(
-            (total: any, current: any) => (total += current.TotalConfirmed),
+            (total: number, current: Country) => (total += current.TotalConfirmed),
             0
-        );
+        ).toString();
     }
 
-    function setTotalDeathsByWorld(data: any) {
+    function setTotalDeathsByWorld(data: CovidSummaryResponse) {
         deathsTotal.innerText = data.Countries.reduce(
-            (total: any, current: any) => (total += current.TotalDeaths),
+            (total: number, current: Country) => (total += current.TotalDeaths),
             0
-        );
+        ).toString();
     }
 
-    function setTotalRecoveredByWorld(data: any) {
+    function setTotalRecoveredByWorld(data: CovidSummaryResponse) {
         recoveredTotal.innerText = data.Countries.reduce(
-            (total: any, current: any) => (total += current.TotalRecovered),
+            (total: number, current: Country) => (total += current.TotalRecovered),
             0
-        );
+        ).toString();
     }
 
-    function setCountryRanksByConfirmedCases(data: any) {
+    function setCountryRanksByConfirmedCases(data: CovidSummaryResponse) {
         const sorted = data.Countries.sort(
-            (a: any, b: any) => b.TotalConfirmed - a.TotalConfirmed
+            (a: Country, b: Country) => b.TotalConfirmed - a.TotalConfirmed
         );
-        sorted.forEach((value: any) => {
+        sorted.forEach((value: Country) => {
             const li = document.createElement("li");
             li.setAttribute("class", "list-item flex align-center");
             li.setAttribute("id", value.Slug);
             const span = document.createElement("span");
-            span.textContent = value.TotalConfirmed;
+            span.textContent = value.TotalConfirmed.toString();
             span.setAttribute("class", "cases");
             const p = document.createElement("p");
             p.setAttribute("class", "country");
@@ -312,7 +314,7 @@ onMounted(() => {
         });
     }
 
-    function setLastUpdatedTimestamp(data: any) {
+    function setLastUpdatedTimestamp(data: CovidSummaryResponse) {
         lastUpdatedTime.innerText = new Date(data.Date).toLocaleString();
     }
 
