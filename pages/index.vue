@@ -92,14 +92,10 @@ onMounted(() => {
         spinnerDiv.appendChild(document.createElement("div"));
         wrapperDiv.appendChild(spinnerDiv);
         return wrapperDiv;
-
-        
     }
 
     // state
     let isDeathLoading = false;
-    // eslint-disable-next-line no-unused-vars
-    let isRecoveredLoading = false;
 
     // api
     function fetchCovidSummary(): Promise<AxiosResponse<CovidSummaryResponse>>  {
@@ -241,8 +237,8 @@ onMounted(() => {
         setLastUpdatedTimestamp(data);
     }
 
-    function renderChart(data: any, labels: any) {
-        const ctx = $("#lineChart").getContext("2d");
+    function renderChart(data: number[], labels: string[]) {
+        const ctx = ($("#lineChart") as HTMLCanvasElement).getContext("2d");
         Chart.defaults.color = "#f5eaea";
         Chart.defaults.font.family = "Exo 2";
         new Chart(ctx, {
@@ -262,11 +258,11 @@ onMounted(() => {
         });
     }
 
-    function setChartData(data: any) {
-        const chartData = data.slice(-14).map((value: any) => value.Cases);
+    function setChartData(data: CountrySummaryResponse) {
+        const chartData = data.slice(-14).map((value: CountrySummaryInfo) => value.Cases);
         const chartLabel = data
             .slice(-14)
-            .map((value: any) =>
+            .map((value: CountrySummaryInfo) =>
                 new Date(value.Date).toLocaleDateString().slice(5, -1)
             );
         renderChart(chartData, chartLabel);
