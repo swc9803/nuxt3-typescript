@@ -60,8 +60,9 @@ Chart.register(...registerables);
 
 onMounted(() => {
     // utils
-    function $(selector: string) {
-        return document.querySelector(selector);
+    function $<T extends HTMLElement>(selector: string) {
+        const element = document.querySelector(selector);
+        return element as T
     }
 
     function getUnixTimestamp(date: Date | string) {
@@ -69,13 +70,13 @@ onMounted(() => {
     }
 
     // DOM                  // $ = document.querySelector
-    const confirmedTotal = $(".confirmed-total") as HTMLSpanElement;
+    const confirmedTotal = $<HTMLSpanElement>(".confirmed-total");
     const deathsTotal = $(".deaths") as HTMLParagraphElement;
     const recoveredTotal = $(".recovered") as HTMLParagraphElement;
     const lastUpdatedTime = $(".last-updated-time") as HTMLParagraphElement;
-    const rankList = $(".rank-list");
-    const deathsList = $(".deaths-list");
-    const recoveredList = $(".recovered-list");
+    const rankList = $(".rank-list") as HTMLOListElement;
+    const deathsList = $(".deaths-list") as HTMLOListElement;
+    const recoveredList = $(".recovered-list") as HTMLOListElement;
     const deathSpinner = createSpinnerElement("deaths-spinner");
     const recoveredSpinner = createSpinnerElement("recovered-spinner");
 
@@ -109,7 +110,10 @@ onMounted(() => {
         Deaths = 'deaths'
     }
 
-    function fetchCountryInfo(countryName: string, status: CovidStatus): Promise<AxiosResponse<CountrySummaryResponse>> {
+    function fetchCountryInfo(
+        countryName: string | undefined,
+        status: CovidStatus
+    ): Promise<AxiosResponse<CountrySummaryResponse>> {
         // params: confirmed, recovered, deaths
         const url = `https://api.covid19api.com/country/${countryName}/status/${status}`;
         return axios.get(url);
@@ -126,13 +130,15 @@ onMounted(() => {
         rankList.addEventListener("click", handleListClick);
     }
 
-    async function handleListClick(event: MouseEvent) {
+    async function handleListClick(event: Event) {
         let selectedId;
         if (
             event.target instanceof HTMLParagraphElement ||
             event.target instanceof HTMLSpanElement
         ) {
-            selectedId = event.target.parentElement.id;
+            selectedId = event.target.parentElement.id
+            ? event.target.parentElement.id
+            : undefined;
         }
         if (event.target instanceof HTMLLIElement) {
             selectedId = event.target.id;
@@ -145,13 +151,16 @@ onMounted(() => {
         startLoadingAnimation();
         isDeathLoading = true;
         const { data: deathResponse } = await fetchCountryInfo(
-            selectedId, CovidStatus.Deaths
+            selectedId,
+            CovidStatus.Deaths
             );
         const { data: recoveredResponse } = await fetchCountryInfo(
-            selectedId, CovidStatus.Recovered
+            selectedId,
+            CovidStatus.Recovered
         );
         const { data: confirmedResponse } = await fetchCountryInfo(
-            selectedId, CovidStatus.Confirmed
+            selectedId,
+            CovidStatus.Confirmed
         );
         endLoadingAnimation();
         setDeathsList(deathResponse);
@@ -178,12 +187,16 @@ onMounted(() => {
                 .slice(0, -1);
             li.appendChild(span);
             li.appendChild(p);
-            deathsList.appendChild(li);
+            deathsList!.appendChild(li);
         });
     }
 
     function clearDeathList() {
-        deathsList.innerHTML = null;
+        if (!deathsList) {
+            // null 이면 함수 탈출
+            return;
+        }
+        deathsList.innerHTML = '';
     }
 
     function setTotalDeathsByCountry(data: CountrySummaryResponse) {
@@ -206,12 +219,18 @@ onMounted(() => {
                 .slice(0, -1);
             li.appendChild(span);
             li.appendChild(p);
-            recoveredList.appendChild(li);
+            recoveredList?.appendChild(li);
+            // 위와 같음
+            // if (recoveredList === null || recoveredList === undefined) {
+            //     return;
+            // } else {
+            //     recoveredList.appendChild(li);
+            // }
         });
     }
 
     function clearRecoveredList() {
-        recoveredList.innerHTML = null;
+        recoveredList.innerHTML = '';
     }
 
     function setTotalRecoveredByCountry(data: CountrySummaryResponse) {
